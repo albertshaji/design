@@ -19,7 +19,7 @@ xset m 4 0
 # keyboard repeat delay and rate
 xset r rate 300 50
 
-dwm-status
+status
 battery-check
 temperature-check
 weather-update
@@ -28,6 +28,6 @@ sxhkd &
 redshift &
 flameshot &
 xautolock -time 15 -locker slock &
-# start searx 
+searx &
 
 exec dbus-launch dwm
