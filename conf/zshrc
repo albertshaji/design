@@ -1,0 +1,12 @@
+# zsh 
+# .zshrc
+
+# cmd **<tab> will bring up fzf
+source /usr/share/fzf/completion.zsh
+
+# tab-completion for progarms like git, pass, etc.  
+autoload -U compinit && compinit
+
+alias ls="ls --color=auto"
+alias clean="gio trash --empty" 
+alias xw='xsetwacom list devices'

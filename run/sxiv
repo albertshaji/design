@@ -1,0 +1,9 @@
+#!/bin/zsh
+
+FILE=/usr/share/applications/sxiv.desktop
+MIME=(`grep MimeType $FILE | cut -c 10- | tr ';' ' '`)
+xdg-mime default sxiv.desktop $MIME
+
+cd
+mkdir -p ".config/sxiv/exec"
+cp "code/script/sxiv-keyhandler" ".config/sxiv/exec/key-handler"

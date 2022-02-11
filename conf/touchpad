@@ -1,0 +1,10 @@
+# libinput
+# /etc/X11/xorg.conf.d/30-touchpad.conf
+
+Section "InputClass"
+	Identifier "touchpad"
+	Driver "libinput"
+        Option "Tapping" "true"
+        Option "TappingDrag" "true"
+	Option "TappingButtonMap" "lmr"
+EndSection

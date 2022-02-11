@@ -1,0 +1,31 @@
+#!/bin/zsh
+
+set -e 
+
+if [[ $EUID -eq 0 ]]; then
+    echo "Don't run as root!"
+    exit 1
+fi
+
+# conf loop
+cd $HOME/code/design/conf 
+
+count=0 
+total=$(ls | wc -l)
+echo "Total: $total\n"
+
+for i in * 
+do 
+	count=$((count + 1))
+
+	j=$(sed -n 2p $i | cut -c 3-)
+
+	if [[ $(echo $j | cut -c 1) = '/' ]]
+	then
+		cp -v $j $i 
+	else 
+		cp -v $HOME/$j $i
+	fi
+
+	echo "$count/$total done\n"
+done

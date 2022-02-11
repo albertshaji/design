@@ -1,0 +1,8 @@
+; redshift 
+; .config/redshift.conf
+
+[redshift]
+temp-day=6200
+temp-night=5200
+dawn-time=06:00
+dusk-time=18:00

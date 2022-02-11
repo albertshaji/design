@@ -1,0 +1,56 @@
+# sxhkd
+# .config/sxhkd/sxhkdrc
+
+super + w
+    brave --enable-low-end-device-mode
+
+super + shift + w
+    brave --enable-low-end-device-mode  --incognito
+
+super + e
+    pcmanfm
+
+super + shift + d
+    sdcvmenu
+
+super + shift + f
+    flameshot gui
+   
+Print
+    screenshot
+
+super + ctrl + s
+    socialmedia
+
+super + ctrl + r
+    rscript
+
+super + ctrl + k
+    gimp-cleanview
+
+super + ctrl + g
+    gimp-wacom
+
+super + ctrl + b
+    blender-wacom
+
+XF86MonBrightness{Up,Down}
+    xbacklight -{inc,dec} 3
+
+XF86Audio{Raise,Lower}Volume
+    pactl set-sink-volume 0 {+,-}2%
+
+#XF86Audio{Mute,MicMute}
+#    amixer --quiet set {Master,Capture} toggle
+
+XF86AudioMute   
+    pactl set-sink-mute 0 toggle
+
+XF86AudioMicMute   
+    pactl set-source-mute 1 toggle
+
+XF86Battery
+    xset dpms force off
+
+XF86ScreenSaver
+    slock & xset dpms force off

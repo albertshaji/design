@@ -1,0 +1,11 @@
+" neovim 
+" .config/nvim/init.vim
+
+" use system clipboard, requires xclip
+set clipboard=unnamedplus
+
+" enable mouse in all mode
+set mouse=a
+
+" disable netrw's banner
+let g:netrw_banner=0

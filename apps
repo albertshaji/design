@@ -1,0 +1,52 @@
+#!/bin/zsh
+
+set -e
+
+# base-devel, libxft - build dependency for some SL programs
+# xorg-xinput - enable/disable devices like mouse pad
+# xf86-video-intel - required by xbaklight in x220
+# fprintd - Thinkpad fingerprint authentication
+# xf86-input-wacom - Remaping wacom express keys
+
+sudo pacman --noconfirm --needed -S \
+	base-devel \
+	man-db \
+	libxft \
+	terminus-font noto-fonts{,-emoji} \
+	xf86-{video-intel,input-wacom} fprintd \
+	xorg-{server,xinit,xbacklight,xsetroot} \
+	mpv youtube-dl \
+	pulseaudio pulseaudio-alsa pavucontrol \
+	slock sxiv dzen2 \
+	rclone \
+	syncthing \
+	transmission-cli \
+	nitrogen \
+	sxhkd \
+	redshift \
+	flameshot \
+	sdcv \
+	fzf \
+	beep \
+	neofetch \
+	zip unzip tar \
+	zathura zathura-djvu zathura-pdf-mupdf \
+	pcmanfm gvfs-mtp ffmpegthumbnailer xterm \
+	ntfs-3g \
+	docker
+
+
+cd $HOME/code 
+for i in (dwm st dmenu)
+do
+    if ! [ -d $i ]
+    then
+        git clone "https://github.com/albymath/${i}.git"
+    fi
+    sudo make -C $i clean install
+done
+
+
+cd
+echo "exec dwm" >.xinitrc
+echo "exec startx" >.zprofile

@@ -1,0 +1,3 @@
+# systemd
+# /etc/udev/rules.d/70-beep.rules
+ACTION=="add", SUBSYSTEM=="input", ATTRS{name}=="PC Speaker", TAG+="uaccess"

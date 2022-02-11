@@ -1,0 +1,4 @@
+# mpv
+# .config/mpv/input.conf
+
+o cycle video-unscaled

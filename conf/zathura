@@ -1,0 +1,19 @@
+# zathura 
+# .config/zathura/zathurarc
+
+set font "terminus 10"
+set selection-clipboard clipboard
+set guioptions "vs"
+
+set default-bg         "#222222"
+set default-fg         "#bbbbbb"
+set recolor-lightcolor "#222222"
+set recolor-darkcolor  "#bbbbbb"
+set statusbar-bg       "#222222"
+set statusbar-fg       "#bbbbbb"
+set index-bg           "#222222"
+set index-fg           "#bbbbbb"
+set inputbar-bg        "#222222"
+set inputbar-fg        "#bbbbbb"
+set completion-bg      "#222222"
+set completion-fg      "#bbbbbb"
