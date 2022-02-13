@@ -13,7 +13,7 @@ sudo pacman --noconfirm --needed -S \
 	man-db \
 	libxft \
 	terminus-font noto-fonts{,-emoji} \
-	xf86-{video-intel,input-wacom} fprintd \
+	xf86-input-wacom \
 	xorg-{server,xinit,xbacklight,xsetroot} \
 	mpv youtube-dl \
 	pulseaudio pulseaudio-alsa pavucontrol \

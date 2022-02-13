@@ -4,13 +4,25 @@ KERNEL=linux-lts
 USER=alby
 HOSTNAME=arch
 TIMEZONE=Asia/Kolkata
-PASS=1998
 FULLFORMAT=false
+
 #TARGET='--removable' #uncomment to install on pendrive
+#pacman -S arch-install-scripts #If not via iso
 
 set -e
 test $EUID -eq 0
 test ! -e /sys/firmware/efi/efivars
+
+read "?Enter password: " PASS
+read "?Retype password: " RPASS
+echo 
+while ! [[ "$PASS" = "$RPASS" ]]
+do
+	unset RPASS
+	read "?Enter password again: " PASS
+	read "?Retype password: " RPASS
+	echo
+done
 
 timedatectl set-ntp true
 
@@ -22,8 +34,8 @@ DISK=/dev/`basename $DISK`
 if $FULLFORMAT
 then
 
-read "?Full partition? (Type: confirm): " REPLY
-test $REPLY = 'confirm'
+read "?Full partition? (Type: Yup): " REPLY
+test $REPLY = 'Yup'
 
 wipefs -fa $DISK
 cat <<EOF | fdisk $DISK -W always
@@ -68,12 +80,13 @@ mount ${DISK}4 /mnt/home
 swapon ${DISK}3
 
 pacstrap /mnt base base-devel \
-    $KERNEL linux-firmware \
+    $KERNEL \
     neovim zsh git \
     grub intel-ucode \
     networkmanager
 
-genfstab -U /mnt >/mnt/etc/fstab
+#genfstab -U /mnt >/mnt/etc/fstab
+genfstab -U /mnt | grep -A 2 --no-group-separator $DISK >/mnt/etc/fstab 
 
 echo $DISK >/mnt/disk.txt
 
