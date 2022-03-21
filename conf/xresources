@@ -1,10 +1,12 @@
 ! xorg-xrdb
 ! .Xresources
 
-*.font: terminus:size=10
+Xft.dpi:128 
+
+*.font: terminus:size=12
 *.foreground: #222222
 *.background: #bbbbbb
 
-dzen2.font: terminus:size=10:style=bold
+dzen2.font: terminus:size=12:style=bold
 !dzen2.foreground: #ff0000
 !dzen2.background: #222222

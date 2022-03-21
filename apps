@@ -1,20 +1,22 @@
 #!/bin/zsh
 
-set -e
 
 # base-devel, libxft - build dependency for some SL programs
 # xorg-xinput - enable/disable devices like mouse pad
 # xf86-video-intel - required by xbaklight in x220
 # fprintd - Thinkpad fingerprint authentication
 # xf86-input-wacom - Remaping wacom express keys
+# acpilight is a replacement for not working xorg-backlight in t470, both provides xbacklight executable
 
 sudo pacman --noconfirm --needed -S \
-	base-devel \
-	man-db \
+	base-devel arch-install-scripts \
+	xclip imagemagick \
+	man-pages man-db \
 	libxft \
 	terminus-font noto-fonts{,-emoji} \
 	xf86-input-wacom \
-	xorg-{server,xinit,xbacklight,xsetroot} \
+	xorg-{server,xinit,xsetroot} \
+	acpilight \
 	mpv youtube-dl \
 	pulseaudio pulseaudio-alsa pavucontrol \
 	slock sxiv dzen2 \
@@ -33,15 +35,16 @@ sudo pacman --noconfirm --needed -S \
 	zathura zathura-djvu zathura-pdf-mupdf \
 	pcmanfm gvfs-mtp ffmpegthumbnailer xterm \
 	ntfs-3g \
-	docker
-
+	docker flatapk \ 
+	tlp tlp-rdw acpi_call-lts \
+	smartmontools 
 
 cd $HOME/code 
-for i in (dwm st dmenu)
+for i (dwm st dmenu)
 do
     if ! [ -d $i ]
     then
-        git clone "https://github.com/albymath/${i}.git"
+        git clone "https://github.com/albertshaji/${i}.git"
     fi
     sudo make -C $i clean install
 done

@@ -2,100 +2,43 @@
 
 KERNEL=linux-lts
 USER=alby
+PASS=0000
 HOSTNAME=arch
 TIMEZONE=Asia/Kolkata
-FULLFORMAT=false
+DISK=/dev/sda
 
 #TARGET='--removable' #uncomment to install on pendrive
 #pacman -S arch-install-scripts #If not via iso
 
 set -e
 test $EUID -eq 0
-test ! -e /sys/firmware/efi/efivars
-
-read "?Enter password: " PASS
-read "?Retype password: " RPASS
-echo 
-while ! [[ "$PASS" = "$RPASS" ]]
-do
-	unset RPASS
-	read "?Enter password again: " PASS
-	read "?Retype password: " RPASS
-	echo
-done
 
 timedatectl set-ntp true
 
-lsblk
-echo
-read "?Select Disk: " DISK
-DISK=/dev/`basename $DISK`
+yes | mkfs.fat -F32  ${DISK}1
+mkswap ${DISK}2
+yes | mkfs.ext4 -c ${DISK}3
 
-if $FULLFORMAT
-then
-
-read "?Full partition? (Type: Yup): " REPLY
-test $REPLY = 'Yup'
-
-wipefs -fa $DISK
-cat <<EOF | fdisk $DISK -W always
-o
-n
-p
-
-
-+200M
-n
-p
-
-
-+32G
-n
-p
-
-
-+8G
-n
-p
-
-
-
-p
-w
-EOF
-yes | mkfs.ext4 ${DISK}4
-
-fi
-
-yes | mkfs.ext4 ${DISK}1
-yes | mkfs.ext4 ${DISK}2
-mkswap ${DISK}3
-
-mkdir -p /mnt
-mount ${DISK}2 /mnt
-
-mkdir -p /mnt/{boot,home}
-mount ${DISK}1 /mnt/boot
+mount ${DISK}3 /mnt
+mkdir -p /mnt/{boot/efi,home}
+mount ${DISK}1 /mnt/boot/efi
+swapon ${DISK}2
 mount ${DISK}4 /mnt/home
-swapon ${DISK}3
 
 pacstrap /mnt base base-devel \
-    $KERNEL \
+    $KERNEL linux-firmware sof-firmware \
     neovim zsh git \
-    grub intel-ucode \
-    networkmanager
+    grub efibootmgr \
+    networkmanager \
+    intel-ucode
 
-#genfstab -U /mnt >/mnt/etc/fstab
-genfstab -U /mnt | grep -A 2 --no-group-separator $DISK >/mnt/etc/fstab 
-
-echo $DISK >/mnt/disk.txt
+genfstab -U /mnt >/mnt/etc/fstab
 
 cd /mnt/home
 if [[ -d $USER ]]
 then
-    cd $USER
-    MY=(. .. audio code dl dox dt phone pix video art www) 
-    MY+=(.gnupg .password-store .stardict .aur)
+    cd $user
+    MY=(. .. audio code dl dox dt phone pix video art www .gnupg .password-store .stardict .aur)
 
     LS=($(ls -a))
 
@@ -108,13 +51,11 @@ then
     mv $DF $TO
 
     # create if they don't exist
-    NO=($(printf "%s\n" $MY $CO | sort | uniq -d))
+    NO=($(printf "%s\n" $MY $CO | sort | uniq -u))
     mkdir $NO
 fi
 
 cat <<EOF | arch-chroot /mnt
-set -e
-
 ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
 hwclock --systohc
 
@@ -126,22 +67,20 @@ echo "LANG=en_US.UTF-8" >/etc/locale.conf
 echo $HOSTNAME >/etc/hostname
 echo "127.0.0.1 localhost" >/etc/hosts
 
-grub-install $DISK --recheck $TARGET
+grub-install $DISK $TARGET
 sed -i "/GRUB_TIMEOUT_STYLE/c\GRUB_TIMEOUT_STYLE=hidden" /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
 
 systemctl enable NetworkManager
 
 useradd -m -g wheel -s /bin/zsh $USER
+echo "%wheel ALL=(ALL) NOPASSWD: ALL" >>/etc/sudoers
+
 echo "$USER:$PASS" | chpasswd
 echo "root:$PASS" | chpasswd
-echo "%wheel ALL=(ALL) NOPASSWD: ALL" >>/etc/sudoers
 
 mkdir -p /etc/systemd/system/getty@tty1.service.d
 echo "[Service]
 ExecStart=
 ExecStart=-/usr/bin/agetty -n -o $USER --noclear %I \$TERM" >/etc/systemd/system/getty@tty1.service.d/override.conf
 EOF
-
-umount -R /mnt
-swapoff ${DISK}3

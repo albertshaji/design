@@ -1,7 +1,7 @@
 # zathura 
 # .config/zathura/zathurarc
 
-set font "terminus 10"
+set font "terminus 12"
 set selection-clipboard clipboard
 set guioptions "vs"
 

@@ -35,7 +35,7 @@ super + ctrl + b
     blender-wacom
 
 XF86MonBrightness{Up,Down}
-    xbacklight -{inc,dec} 3
+    sudo xbacklight -{inc,dec} 3
 
 XF86Audio{Raise,Lower}Volume
     pactl set-sink-volume 0 {+,-}2%
@@ -49,8 +49,5 @@ XF86AudioMute
 XF86AudioMicMute   
     pactl set-source-mute 1 toggle
 
-XF86Battery
-    xset dpms force off
-
-XF86ScreenSaver
+XF86Display
     slock & xset dpms force off
